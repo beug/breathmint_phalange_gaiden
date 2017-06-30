@@ -21,6 +21,7 @@
 
         var timex;
         var seconds = 7;
+        var timestamp = 0;
 
         var tictac;
         var tictacs = [];
@@ -63,6 +64,7 @@
         var lid;
         var lid_location = [0, 0, 0];
         var trap_count = 0;
+        var toe_count = 0;
         var zLocater = 120;
 
         var canvas_width;
@@ -72,9 +74,9 @@
         var rules_and_regulations;
         var win;
         var loss;
-        var tictac_score = ["Tictac: ", 0];
-        var toe_score = ["Toe = 0", 0];
-        var timestamp = 0;
+        var tictac_score; // = ["Tictac: ", 0];
+        var toe_score; // = ["Toe = 0", 0];
+        var game_state_boolean = false;
 
         function preload() {
           rules_and_regulations = createDiv(
@@ -87,7 +89,9 @@
           loss = createDiv("Aw, bummer... [pun about TOEing the line]!");
           loss.style("visibility", "hidden");
           tictac_score = createDiv();
-          toe_score = createDiv(toe_score[0], nf(toe_score[1]));
+          tictac_score.style("visibility", "hidden");
+          toe_score = createDiv(); 
+          toe_score.style("visibility", "hidden");
 
           subject_matter = rules_and_regulations;
           tictac = loadModel('./3D_assets/tictac.obj');
@@ -147,12 +151,7 @@
         }
 
         function gamePlay(game_state) {
-          tictac_score.html ("Tictac Count: " + nf(trap_count));
-          tictac_score.style("position", 10, canvas_height-80);
-          tictac_score.style("padding", "20px");
-          tictac_score.style("font-size", "50px");
-          tictac_score.style("font-family", "Arial");
-          tictac_score.style("color", "#FFEEAA");
+          scoreFormatter();
           for (var i=0; i<number_of_things; i++) {
             if (tictac_boolean[i] == true){
               tictacs[i].rKelly();
@@ -166,10 +165,12 @@
               toes[i].headsUp();
             }
           }
+
           if(game_state){
             embraceIntersectionality(tictacs);
             embraceIntersectionality(toes);
           }
+
           if (trap_count == number_of_things){
             subject_matter = win;
             timestamp = millis();
@@ -178,23 +179,41 @@
           }
         }
 
+        function scoreFormatter(){
+          tictac_score.html ("Tictac Count: " + nf(trap_count));
+          tictac_score.style("visibility", "visible");
+          tictac_score.style("position", 0, canvas_height-80);
+          tictac_score.style("padding", "20px");
+          tictac_score.style("font-size", "50px");
+          tictac_score.style("font-family", "Arial");
+          tictac_score.style("color", "#FFEEAA");
+          toe_score.html ("Toe Count: " + nf(toe_count));
+          toe_score.style("visibility", "visible");
+          toe_score.style("position", canvas_width - 350, canvas_height-80);
+          toe_score.style("text-align", "right");
+          toe_score.style("padding", "20px");
+          toe_score.style("font-size", "50px");
+          toe_score.style("font-family", "Arial");
+          toe_score.style("color", "#FFEEAA");
+        }
+
         // TODO add toe_location!!!!!!!
         function embraceIntersectionality(model_to_embrace){
           var modelX, modelY, modelZ, lidX, lidY, range, previous_state, current_state;
+
           for(var i=0; i < model_to_embrace.length; i++){
-          modelX = tictac_location[i][0];
+            modelX = tictac_location[i][0];
             modelY = tictac_location[i][1];
             modelZ = tictac_location[i][2];
+            previous_state = tictac_boolean[i];
             lidX = lid_location[0];
             lidY = lid_location[1];
             range = 25;
-            previous_state = tictac_boolean[i];
-            current_state;
 
             if (nearEnoughNeighbor(modelX, lidX-range, lidX+range) && nearEnoughNeighbor(modelY, lidY-range, lidY+range)){
               tictac_boolean[i] = true;
               current_state = tictac_boolean[i];
-              if (current_state != previous_state){
+              if(current_state != previous_state){
                 trap_count++;
                 previous_state = current_state;
               }
@@ -253,7 +272,7 @@
               tictac_location[id][1]=round(this.y);
               tictac_location[id][2]=round(this.z);
             }
-            if (this.y > height + 100){ //TODO: fix respawning
+            if (this.y > height + 400){ //TODO: fix respawning
               this.y = 0;
               this.x = random(canvas_width);
               this.speed = random(3, 13);
@@ -292,7 +311,7 @@
                 ambientMaterial (this.tone[0] + tone_offset, this.tone[1]+tone_offset, this.tone[2]+tone_offset, 255);
               } else {
                 ambientMaterial (100, 255);
-              }
+              } 
               model(model_to_use);
             pop();
           };
@@ -315,10 +334,12 @@
              }
             }
             task.style("visibility", "visible");
-            gamePlay(false);
+            game_state_boolean = false;
+            gamePlay(game_state_boolean);
           }else{
             task.style("visibility", "hidden");
-            gamePlay(true);
+            game_state_boolean = true; 
+            gamePlay(game_state_boolean);
           }
         }
     </script>
