@@ -51,22 +51,29 @@ var canvas_height;
 var canvas_reference;
 
 var rules_and_regulations;
+var rules_and_regulations_content = 
+"Once upon a time in a pink tropical storm, TIC TAC and TOE descended from the heavens upon the roads of Monaco. <p>Capture the beloved TIC TAC (with your cursor); avoid the dreaded TOE. Three in a row will either propell you to flavour fresh satisfaction, or precisely the inverse. <p> you could play this forever.";
+
 var win;
+var win_content = 
+"YOU DID IT! YOU STINKER! <p> Prepare to have another go!";
+
 var loss;
+var loss_content =
+"Aw, bummer... [pun about TOEing the line]!";
+
 var win_counter = 0;
 var tictac_score; 
 var toe_score; 
 var game_state_boolean = false;
+var toggle = false;
 
 function preload() {
-  rules_and_regulations = createDiv(
-      "Once upon a time in a pink tropical storm, TIC TAC and TOE descended from the heavens upon the roads of Monaco. <p>Capture the beloved TIC TAC (with your cursor); avoid the dreaded TOE. Three in a row will either propell you to flavour fresh satisfaction, or precisely the inverse. <p> you could play this forever."
-  );
-
+  rules_and_regulations = createDiv(rules_and_regulations_content);
   rules_and_regulations.style("visibility", "hidden");
-  win = createDiv("YOU DID IT! YOU STINKER! <p> Prepare to have another go!");
+  win = createDiv(win_content);
   win.style("visibility", "hidden");
-  loss = createDiv("Aw, bummer... [pun about TOEing the line]!");
+  loss = createDiv(loss_content);
   loss.style("visibility", "hidden");
   tictac_score = createDiv();
   tictac_score.style("visibility", "hidden");
@@ -96,9 +103,11 @@ function setup() {
   canvas_reference.position(x, y);
 }
 
+//TODO investigate if rendering gl to an offscreen buffer e.g. createGraphics() would solve rezising issue
 function windowResized(){
   canvas_width = windowWidth;
   canvas_height = windowHeight;
+  canvas_reference=createCanvas(canvas_width, canvas_height, WEBGL); // THIS IS PARTICULARLY NASTY, HOWEVER IT SEEMS TO BE THE ONLY WAY TO RE-INSTANTIATE THE SIZE OF THE WEBGL CONTEXT IF THE THE WINDOW-SIZE CHANGES. 
   centerCanvas();
 }
 
@@ -149,8 +158,8 @@ function gamePlay(game_state) {
   }
 
   if(game_state){
-    embraceIntersectionality(tictacs);
-    embraceIntersectionality(toes);
+    embraceIntersection(tictacs);
+    embraceIntersection(toes);
   }
 
   if (trap_count == number_of_things){
@@ -166,30 +175,30 @@ function scoreFormatter(){
   tictac_score.html ("Tictac Count: " + nf(trap_count));
   tictac_score.style("visibility", "visible");
   tictac_score.style("position", 0, canvas_height-80);
-  tictac_score.style("padding", "20px");
-  tictac_score.style("font-size", "50px");
+  tictac_score.style("padding", "2%");
+  tictac_score.style("font-size", "3vw");
   tictac_score.style("font-family", "Arial");
   tictac_score.style("color", "#FFEEAA");
   toe_score.html ("Toe Count: " + nf(toe_count));
   toe_score.style("visibility", "visible");
   toe_score.style("position", canvas_width - 350, canvas_height-80);
   toe_score.style("text-align", "right");
-  toe_score.style("padding", "20px");
-  toe_score.style("font-size", "50px");
+  toe_score.style("padding", "2%");
+  toe_score.style("font-size", "3vw");
   toe_score.style("font-family", "Arial");
   toe_score.style("color", "#FFEEAA");
   win_count.html ("Wins: " + nf(win_counter));
   win_count.style("visibility", "visible");
   win_count.style("position", 0, canvas_height-110);
   win_count.style("text-align", "right");
-  win_count.style("padding", "20px");
-  win_count.style("font-size", "30px");
+  win_count.style("padding", "2%");
+  win_count.style("font-size", "2vw");
   win_count.style("font-family", "Arial");
   win_count.style("color", "#FFEEAA");
 }
 
 // TODO add toe_location!!!!!!!
-function embraceIntersectionality(model_to_embrace){
+function embraceIntersection(model_to_embrace){
   var modelX, modelY, modelZ, lidX, lidY, range, previous_state, current_state;
 
   for(var i=0; i < model_to_embrace.length; i++){
@@ -273,7 +282,7 @@ function fallingObjects(model_to_use, id){
 	this.tone = toe_tones[abs(round(random(toe_tones.length))-1)];
       }
     }else if (this.y > height + 400 && game_state_boolean == false){
-      console.log("WE HAVE REACHED THE FALSE GAME STATE IN GRACE KELLY – SHOULD START REMOVING TOES");
+      //console.log("WE HAVE REACHED THE FALSE GAME STATE IN GRACE KELLY – SHOULD START REMOVING TOES");
       //toes.splice(id, 1);
     }
   };
@@ -315,8 +324,9 @@ function typist(task){
   handleTicTacBox(container, 170);
   handleTicTacBox(lid, 255);
   task.style("position", 20, 20);
-  task.style("padding", "100px");
-  task.style("font-size", "50px");
+  task.style("text-align", "center");
+  task.style("padding", "5%");
+  task.style("font-size", "3vw");
   task.style("font-family", "Arial");
   task.style("color", "#FFEEAA");
 
@@ -336,3 +346,27 @@ function typist(task){
     gamePlay(game_state_boolean);
   }
 }
+
+function mousePressed(){
+  if(!toggle){
+    if(mouseX > canvas_width-90 && mouseX < canvas_width && mouseY > 0 && mouseY < 90) {
+      toggle = true;
+      fullscreen(toggle);
+    }
+  }else{
+    if(mouseX > canvas_width-90 && mouseX < canvas_width && mouseY > 0 && mouseY < 90) {
+      toggle = false;
+      fullscreen(toggle);
+    }
+  }
+} 
+
+
+//javascript helper
+(function titleScroller(content) {
+    document.title = content;
+    setTimeout(function () {
+        titleScroller(content.substr(1) + content.substr(0, 1));
+    }, 90);
+}(" TIC TAC TOE: Breathmint Phalange Gaiden Special Edition "));
+
