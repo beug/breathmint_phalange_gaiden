@@ -1,5 +1,5 @@
 var timex;
-var seconds = 5; // <-- for testing : for real --> 15;
+var seconds = 15;
 var timestamp = 0;
 
 var tictac;
@@ -344,7 +344,7 @@ function fallingObjects(model_to_use, id){
 
 /*to put or not to put text on screen / play the game*/
 function typist(task){
-  handleTicTacBox(container, 64);
+  handleTicTacBox(container, 94);
   handleTicTacBox(lid, 255);
   task.style("position", 20, 20);
   task.style("padding", "5%");
@@ -386,7 +386,7 @@ function touchMoved() {
 
 /*css for on-screen text*/
 function scoreFormatter(){
-  tictac_score.html ("Tictacs caught in a row: " + nf(tictac_row) + "<br>Tictac Total: " + nf(trap_count) + "/" + nf(number_of_things) + "<br>Win Count");
+  tictac_score.html ("Tictacs caught in a row: " + nf(tictac_row) + "<br>Tictac Total: " + nf(trap_count) + "/" + nf(number_of_things) + "<br>Win Count: " + nf(win_counter));
   tictac_score.style("visibility", "visible");
   tictac_score.style("position", "fixed");
   tictac_score.style("bottom", "0px");
@@ -394,7 +394,7 @@ function scoreFormatter(){
   tictac_score.style("font-size", "2vw");
   tictac_score.style("font-family", "Arial");
   tictac_score.style("color", "#FFEEAA");
-  toe_score.html ("Struck by: " + nf(toe_in_a_row) +  " toes in a row<br>Tictac Total: " + nf(toed) + "/" + nf(number_of_things) + "<br>Loss Count");
+  toe_score.html ("Struck by: " + nf(toe_in_a_row) +  " toes in a row<br>Tictac Total: " + nf(toed) + "/" + nf(number_of_things) + "<br>Loss Count: " + nf(loss_counter));
   toe_score.style("visibility", "visible");
   toe_score.style("position", "fixed");
   toe_score.style("right", "0px");
