@@ -60,7 +60,7 @@ var win_counter = 0;
 var win_count;
 var win;
 var win_content = 
-"YOU DID IT! YOU STINKER! Go ahead, celebrate a little. You deserve it. <p> When you're done, Prepare to have another go!";
+"YOU DID IT! YOU STINKER! Go ahead, celebrate a little. You deserve it. <p> When you've finished with the celebration, prepare to have another go!";
 
 var loss_counter = 0;
 var loss_count;
