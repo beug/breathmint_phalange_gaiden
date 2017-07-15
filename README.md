@@ -1,3 +1,4 @@
+![spash](graphic_assets/bpg_splash.gif)
 # _Breathmint Phalange Gaiden_
 A simple browser implementation of the classic game: Tic Tac Toe. Other working titles include: Tic Tac Toe Road.
 
