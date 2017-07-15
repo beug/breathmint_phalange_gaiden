@@ -1,4 +1,4 @@
-![spash](graphic_assets/bpg_splash.gif) <!-- .element width="100%" -->
+![spash graphic](graphic_assets/bpg_splash.gif) <!-- .element width="100%" -->
 # :pill::pill: _Breathmint Phalange Gaiden_ :pill::pill:
 A simple browser implementation of the classic game: Tic Tac Toe. Other working titles include: Tic Tac Toe Road.
 
@@ -8,9 +8,9 @@ A hosted version of this game can be found at:
 Developed using **[p5js](https://p5js.org/)**
 
 ## Gameplay:
-Will work on mobile, better on a tablet in landscape mode and best in a desktop browser ==especially with fullscreen mode enabled==.
+Will work on mobile, better on a tablet in landscape mode and best in a desktop browser *especially with fullscreen mode enabled*.
 
-![spash](graphic_assets/fullscreen.gif)
+![Hi I'm FULLSCREEN](graphic_assets/fullscreen.gif)
 
 Tic Tac Toe is [historically](https://en.wikipedia.org/wiki/Gomoku) encoded as a "get a bunch of things in a row" sort of a deal. This flavor of the game borrows from that sensibility insofaras the game introduction alludes:
 
