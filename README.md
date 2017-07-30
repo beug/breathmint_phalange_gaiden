@@ -1,9 +1,13 @@
-![spash graphic](graphic_assets/bpg_splash.gif) <!-- .element width="100%" -->
+![spash graphic](graphic_assets/bpg_splash.gif)
+
 # :pill::pill: _Breathmint Phalange Gaiden_ :pill::pill:
 A simple browser implementation of the classic game: Tic Tac Toe. Other working titles include: Tic Tac Toe Road.
 
 A hosted version of this game can be found at: 
 **[tictactoe.pink](http://tictactoe.pink)**. It will most likely be in the most recent commit/build of the code found here.
+
+Alternatively, can be previewed from source using 
+**[rawgit](https://rawgit.com/beug/breathmint_phalange_gaiden/master/index.html)**™
 
 Developed using **[p5js](https://p5js.org/)**
 

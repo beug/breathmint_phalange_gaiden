@@ -154,20 +154,20 @@ function draw() {
   typist(subject_matter);
 }
 
-/*call the object methods and format any onscreen html text*/
+/*call the object methods, track interaction, and format any onscreen html text*/
 function gamePlay(game_state) {
   if(game_state){
     for (var i=0; i<number_of_things; i++){
-      if(tictac_boolean[i] == true){
-        tictacs[i].rKelly();  //whether or not the tictacs are displayed in the container or falling
-        tictacs[i].headsUp();
+      if(tictac_boolean[i] == true){ //whether or not the tictacs are displayed in the container or falling
+        tictacs[i].graceHopper();  
+        tictacs[i].graceBumbry();
         toes[i].graceKelly();
-        toes[i].headsUp();
+        toes[i].graceBumbry();
       }else{
         tictacs[i].graceKelly();
-        tictacs[i].headsUp();
+        tictacs[i].graceBumbry();
         toes[i].graceKelly();
-        toes[i].headsUp();
+        toes[i].graceBumbry();
       }
     }
 
@@ -260,10 +260,10 @@ function handleTicTacBox(model_to_use, alpha){
   pop();
 }
 
-/*description of objects that fall*/
+/*description of objects and methods*/
 function fallingObjects(model_to_use, id){
   this.x = random(canvas_width);
-  this.y = -100; //seems like a good enuff starting point :/ 
+  this.y = -100; 
   this.z = random(100, -100);
   this.speed = random(3, 13);
   this.rotation;
@@ -280,7 +280,7 @@ function fallingObjects(model_to_use, id){
     this.scale = (0.6);
   };
 
-  /*an object falls from a veranda*/
+  /*a method discribing how an object might fall*/
   this.graceKelly = function() {
     this.y += this.speed;
     this.rotation = frameCount;
@@ -293,7 +293,7 @@ function fallingObjects(model_to_use, id){
       toe_location[id][1]=round(this.y);
       toe_location[id][2]=round(this.z);
     }
-    if(this.y > canvas_height + 400 && game_state_boolean == true){ //TODO: fix respawning -- also use canvas_height instead of height
+    if(this.y > canvas_height + 400 && game_state_boolean == true){ //TODO: fix respawning
       this.y = 0;
       this.x = random(canvas_width);
       this.speed = random(3, 13);
@@ -303,14 +303,13 @@ function fallingObjects(model_to_use, id){
 	this.tone = toe_tones[abs(round(random(toe_tones.length))-1)];
         toe_boolean[id] = false;
       }
-    }else if(this.y > height + 400 && game_state_boolean == false){ //TODO: WHAT? fix this.
-      //console.log("WE HAVE REACHED THE FALSE GAME STATE IN GRACE KELLY – SHOULD START REMOVING TOES");
+    }else if(this.y > height + 400 && game_state_boolean == false){ //TODO: WHAT? This doesn't do anything – fix this.
       toes.splice(id, 1);
     }
   };
 
-  /*an object gets trapped in the closet... er... tictac container*/
-  this.rKelly = function() {
+  /*a method for holding certain objects once they've been computed*/
+  this.graceHopper = function() {
     push();
     this.scale = (0.225, 0.225, 0.225);
     this.rotation = 1;
@@ -323,8 +322,8 @@ function fallingObjects(model_to_use, id){
     pop();
   };
 
-  /*additional aspects of falling object*/
-  this.headsUp = function() {
+  /*additional methods of an object*/
+  this.graceBumbry = function() {
     var tone_offset = 0;
     push();
       translate(-canvas_width/2 + this.x, -canvas_height/2 + this.y, this.z);
@@ -394,7 +393,7 @@ function scoreFormatter(){
   tictac_score.style("font-size", "2vw");
   tictac_score.style("font-family", "Arial");
   tictac_score.style("color", "#FFEEAA");
-  toe_score.html ("Struck by: " + nf(toe_in_a_row) +  " toes in a row<br>Tictac Total: " + nf(toed) + "/" + nf(number_of_things) + "<br>Loss Count: " + nf(loss_counter));
+  toe_score.html ("Struck by: " + nf(toe_in_a_row) +  " toes in a row<br>Toes Total: " + nf(toed) + "/" + nf(number_of_things) + "<br>Loss Count: " + nf(loss_counter));
   toe_score.style("visibility", "visible");
   toe_score.style("position", "fixed");
   toe_score.style("right", "0px");
@@ -412,5 +411,5 @@ function scoreFormatter(){
   setTimeout(function () {
     titleScroller(content.substr(1) + content.substr(0, 1));
   }, 90);
-}(" TIC TAC TOE: Breathmint Phalange Gaiden Special Edition "));
+}(" TIC TAC TOE: Breathmint Phalange Gaiden Special Edition | "));
 
