@@ -7,9 +7,9 @@ var tictacs = [];
 var tictac_location = [];
 var tictac_boolean = [];
 var tictac_tones = [
-		     [255, 255, 255], //white
-		     [254, 138, 42], //orange
-		     [84, 224, 165] //wintergreen
+		     [255, 255, 255], //classic mint
+		     [254, 138, 42],  //orange
+		     [84, 224, 165]   //wintergreen
 		   ];
 
 var toe;
@@ -74,10 +74,10 @@ var stalemate_content =
 
 var tictac_score; 
 var toe_score; 
-var game_state_boolean = false;
+var game_state_toggle = false;
+var round_ended_toggle = false;
 var toggle = false;
 
-/*preloading assets prevents game from glitching too hard on startup*/
 function preload() {
   rules_and_regulations = createDiv(rules_and_regulations_content);
   rules_and_regulations.style("visibility", "hidden");
@@ -85,7 +85,7 @@ function preload() {
   tictac_score.style("visibility", "hidden");
   toe_score = createDiv(); 
   toe_score.style("visibility", "hidden");
-  win =  createDiv(win_content);
+  win = createDiv(win_content);
   win.style("visibility", "hidden");
   loss = createDiv(loss_content);
   loss.style("visibility", "hidden");
@@ -106,27 +106,25 @@ function setup() {
   objectsInit();
 }
 
-/*keeps track of size of the current canvas*/
- function centerCanvas(){
+function centerCanvas(){
   var x = (windowWidth - width) / 2;
   var y = (windowHeight - height) / 2;
   canvas_reference.position(x, y);
 }
 
-/*keeps track of the browser window size and updates canvas if it changes |  TODO investigate if rendering gl to an offscreen buffer e.g. createGraphics() would solve rezising issue*/
+/*TODO: investigate if rendering GL to an offscreen buffer e.g. createGraphics() would solve rezising issue*/
 function windowResized(){
   canvas_width = windowWidth;
   canvas_height = windowHeight;
-  canvas_reference=createCanvas(canvas_width, canvas_height, WEBGL); // THIS IS PARTICULARLY NASTY, HOWEVER IT SEEMS TO BE THE ONLY WAY TO RE-INSTANTIATE THE SIZE OF THE WEBGL CONTEXT IF THE THE WINDOW-SIZE CHANGES. 
+  canvas_reference=createCanvas(canvas_width, canvas_height, WEBGL); //Temporary Necessary Evil
   centerCanvas();
 }
 
-/*instantiate all the objects in a round  – eliminate existing ones first if necessary*/
 function objectsInit(){
   if(number_of_things){
-    tictacs.splice(0, number_of_things);         // erases history, should it already exist 
-    tictac_boolean.splice(0, number_of_things);  // samesies
-    toes.splice(0, number_of_things);            // ""
+    tictacs.splice(0, number_of_things);
+    tictac_boolean.splice(0, number_of_things);
+    toes.splice(0, number_of_things);
     toe_boolean.splice(0, number_of_things);
   }
   
@@ -144,63 +142,69 @@ function objectsInit(){
   }
 }
 
-/*main loop just keeps the lights on while it passes the time*/
 function draw() {
   var lightY = (mouseY / height - 0.3) * 2;
   var lightX = (mouseX / width  - 0.3) * 2;
   directionalLight(110, 110, 110, lightX, lightY, 0.6);
   ambientLight(180);
-  timex = millis() - timestamp;
+  timex = round(millis()) - timestamp;
+  handleTicTacBox(container, 94);
+  handleTicTacBox(lid, 255);
   typist(subject_matter);
 }
 
-/*call the object methods, track interaction, and format any onscreen html text*/
 function gamePlay(game_state) {
   if(game_state){
     for (var i=0; i<number_of_things; i++){
-      if(tictac_boolean[i] == true){ //whether or not the tictacs are displayed in the container or falling
-        tictacs[i].graceHopper();  
-        tictacs[i].graceBumbry();
-        toes[i].graceKelly();
-        toes[i].graceBumbry();
+      if(tictac_boolean[i] == true){ 
+        tictacs[i].resting();  
+        tictacs[i].styling();
+        toes[i].falling();
+        toes[i].styling();
       }else{
-        tictacs[i].graceKelly();
-        tictacs[i].graceBumbry();
-        toes[i].graceKelly();
-        toes[i].graceBumbry();
+        tictacs[i].falling();
+        tictacs[i].styling();
+        toes[i].falling();
+        toes[i].styling();
       }
     }
 
     embraceIntersection(tictacs, tictac_location);
     embraceIntersection(toes, toe_location);
-
+    
     if(tictac_row >= 3){
       subject_matter = win;
       win_counter++;
-      initHelper();
+      timestamp = round(millis());
+      round_ended_toggle = true;
     }else if(toe_in_a_row >= 3){
       subject_matter = loss;
       loss_counter++;
-      initHelper();
+      timestamp = round(millis());
+      round_ended_toggle = true;
     }else if(number_of_things - trap_count < 3 && tictac_row < 1){
       subject_matter = stalemate;
-      initHelper();
-    } 
+      timestamp = round(millis());
+      round_ended_toggle = true;
+    }
+
+  }else if(subject_matter != rules_and_regulations){
+    endRoundGracefully();
   }
 }
 
-function initHelper(){
-  timestamp = millis();
-  trap_count = 0;
-  tictac_row = 0;
-  toed = 0;
-  toe_in_a_row = 0;
-  objectsInit();
+function endRoundGracefully(){
+    for (var i=0; i<number_of_things; i++){
+      tictac_boolean[i] = false;
+      tictacs[i].falling();
+      tictacs[i].styling();
+      toes[i].falling();
+      toes[i].styling();
+    }
 }
 
-/*Collision Detective | note that current_state is to detect whether or not the detected intersection has changed since the last draw (so the same instance of the object doesn't continue to increment the counter))*/  
 function embraceIntersection(model_to_embrace, locator){
-  var modelX, modelY, modelZ, lidX, lidY, range, previous_state, current_state;
+  var modelX, modelY, modelZ, lidX, lidY, range, previous_state, current_state; 
 
   for(var i=0; i < model_to_embrace.length; i++){
     modelX = locator[i][0];
@@ -239,7 +243,6 @@ function embraceIntersection(model_to_embrace, locator){
   }
 }
 
-/*logical assitance for x/y ranges*/
 function nearEnoughNeighbor(x, minim, maxim){
      return x >= minim && x <= maxim;
 }
@@ -260,7 +263,6 @@ function handleTicTacBox(model_to_use, alpha){
   pop();
 }
 
-/*description of objects and methods*/
 function fallingObjects(model_to_use, id){
   this.x = random(canvas_width);
   this.y = -100; 
@@ -280,8 +282,7 @@ function fallingObjects(model_to_use, id){
     this.scale = (0.6);
   };
 
-  /*a method discribing how an object might fall*/
-  this.graceKelly = function() {
+  this.falling = function() {
     this.y += this.speed;
     this.rotation = frameCount;
     if(this.model == tictac){
@@ -293,7 +294,7 @@ function fallingObjects(model_to_use, id){
       toe_location[id][1]=round(this.y);
       toe_location[id][2]=round(this.z);
     }
-    if(this.y > canvas_height + 400 && game_state_boolean == true){ //TODO: fix respawning
+    if(this.y > canvas_height + 400 && round_ended_toggle == false){ 
       this.y = 0;
       this.x = random(canvas_width);
       this.speed = random(3, 13);
@@ -303,13 +304,10 @@ function fallingObjects(model_to_use, id){
 	this.tone = toe_tones[abs(round(random(toe_tones.length))-1)];
         toe_boolean[id] = false;
       }
-    }else if(this.y > height + 400 && game_state_boolean == false){ //TODO: WHAT? This doesn't do anything – fix this.
-      toes.splice(id, 1);
     }
   };
 
-  /*a method for holding certain objects once they've been computed*/
-  this.graceHopper = function() {
+  this.resting = function() {
     push();
     this.scale = (0.225, 0.225, 0.225);
     this.rotation = 1;
@@ -322,8 +320,7 @@ function fallingObjects(model_to_use, id){
     pop();
   };
 
-  /*additional methods of an object*/
-  this.graceBumbry = function() {
+  this.styling = function() {
     var tone_offset = 0;
     push();
       translate(-canvas_width/2 + this.x, -canvas_height/2 + this.y, this.z);
@@ -333,7 +330,7 @@ function fallingObjects(model_to_use, id){
       scale(this.scale, this.scale, this.scale);
       if(this.tone){
 	ambientMaterial (this.tone[0] + tone_offset, this.tone[1]+tone_offset, this.tone[2]+tone_offset, 255);
-      } else {
+      }else{
 	ambientMaterial (100, 255);
       } 
       model(model_to_use);
@@ -341,29 +338,27 @@ function fallingObjects(model_to_use, id){
   };
 }
 
-/*to put or not to put text on screen / play the game*/
 function typist(task){
-  handleTicTacBox(container, 94);
-  handleTicTacBox(lid, 255);
-  task.style("position", 20, 20);
-  task.style("padding", "5%");
-  task.style("font-size", "2vw");
-  task.style("font-family", "Arial");
-  task.style("color", "#FFEEAA");
-
   if(timex < seconds * 1000){
     task.style("visibility", "visible");
-    game_state_boolean = false; //congress is not in session
-    gamePlay(game_state_boolean);
+    game_state_toggle = false;
+    gamePlay(game_state_toggle);
+    typeSetter(task);
+  }else if(nearEnoughNeighbor(timex, (seconds * 1000) - 15, (seconds * 1000) + 15)){
+    round_ended_toggle = false;
+    trap_count = 0;
+    tictac_row = 0;
+    toed = 0;
+    toe_in_a_row = 0;
+    objectsInit();
   }else{
     task.style("visibility", "hidden");
-    game_state_boolean = true; 
-    gamePlay(game_state_boolean);
-    scoreFormatter();
+    game_state_toggle = true; 
+    gamePlay(game_state_toggle);
+    typeSetter(task);
   }
 }
 
-/*toggle fullscreen | TODO: swap in colorful gif on rollover*/
 function mousePressed(){
   if(!toggle){
     if(mouseX > canvas_width-90 && mouseX < canvas_width && mouseY > 0 && mouseY < 90) {
@@ -383,8 +378,12 @@ function touchMoved() {
   return false;
 }
 
-/*css for on-screen text*/
-function scoreFormatter(){
+function typeSetter(message){
+  message.style("position", 20, 20);
+  message.style("padding", "5%");
+  message.style("font-size", "2vw");
+  message.style("font-family", "Arial");
+  message.style("color", "#FFEEAA");
   tictac_score.html ("Tictacs caught in a row: " + nf(tictac_row) + "<br>Tictac Total: " + nf(trap_count) + "/" + nf(number_of_things) + "<br>Win Count: " + nf(win_counter));
   tictac_score.style("visibility", "visible");
   tictac_score.style("position", "fixed");
@@ -405,7 +404,6 @@ function scoreFormatter(){
   toe_score.style("color", "#FFEEAA");
 }
 
-/*js title scroller */
 (function titleScroller(content) {
   document.title = content;
   setTimeout(function () {
