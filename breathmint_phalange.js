@@ -34,7 +34,6 @@ var toe_tones = [
 		  [58, 37, 32]
 ];
 
-var respawn_boolean = true;
 var number_of_things;
 var container;
 var container_contents = [];
@@ -44,7 +43,6 @@ var trap_count = 0;
 var tictac_row = 0;
 var toed = 0;
 var toe_in_a_row = 0;
-var zLocater = 120;
 
 var canvas_width;
 var canvas_height;
@@ -59,7 +57,7 @@ var win_counter = 0;
 var win_count;
 var win;
 var win_content = 
-"YOU DID IT! YOU STINKER! Go ahead, celebrate a little. You deserve it. <p> When you've finished with the celebration, prepare to have another go!";
+"YOU DID IT! YOU STINKER! Go ahead, celebrate a little. You deserve it. <p> When you've finished with the celebration, prepare to have another go. Just for fizz and wiggles... see how many total tictacs you can collect in a round without losing!";
 
 var loss_counter = 0;
 var loss_count;
@@ -110,7 +108,7 @@ function centerCanvas(){
   var y = (windowHeight - height) / 2;
   canvas_reference.position(x, y);
 }
-
+ 
 /*TODO: investigate if rendering GL to an offscreen buffer e.g. createGraphics() would solve rezising issue*/
 function windowResized(){
   canvas_width = windowWidth;
@@ -127,7 +125,7 @@ function objectsInit(){
     toe_boolean.splice(0, number_of_things);
   }
   
-  number_of_things = round(random(4, 12));
+  number_of_things = round(random(4, 15));
   
   for (var i=0; i<number_of_things; i++) {
     tictacs.push(new fallingObjects(tictac, i));
@@ -256,14 +254,14 @@ function nearEnoughNeighbor(x, minim, maxim){
 }
 
 function handleTicTacBox(model_to_use, alpha){
-  var x = mouseX - canvas_width/1.75;
-  var y = (mouseY/3)+200;
+  var x = mouseX - canvas_width/1.72
+  var y = mouseY - canvas_height/4;  //(mouseY/3)+200;
   var z = 0;
   push();
     lid_location[0] = round(mouseX);
-    lid_location[1] = round(mouseY);
-    lid_location[2] = round(z - zLocater);
-    translate(x, y, z - zLocater);
+    lid_location[1] = round(mouseY); 
+    lid_location[2] = z; 
+    translate(x, y, z);
     fill(255, 255, 255, 80);
     ambientMaterial(255,alpha);
     scale(1, 1.2, 0.3);
@@ -315,13 +313,20 @@ function fallingObjects(model_to_use, id){
     }
   };
 
-  this.resting = function() {
+  this.resting = function() { 
     push();
     this.scale = (0.225, 0.225, 0.225);
     this.rotation = 1;
-    this.x = lid_location[0] -canvas_width*0.065 + 25*id;
-    this.y = (mouseY/3)+canvas_height*.71;
-    this.z = lid_location[2];
+    this.x = this.x = lid_location[0] - canvas_width * 0.065 + 25*id + 5;
+    this.y = this.y = lid_location[1] + (canvas_height/4 - 25); 
+    this.z = this.z = lid_location[2];
+    if(id > 4 && id < 10){
+      this.x -= 125;
+      this.y -= 30;
+    }else if(id > 9){
+      this.x -= 250;
+      this.y -= 60;
+    }
     this.xRotate = radians(this.x);
     this.yRotate = radians(120);
     this.zRotate = radians(0);
