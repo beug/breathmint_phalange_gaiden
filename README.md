@@ -7,7 +7,8 @@ A hosted version of this game can be found at:
 **[tictactoe.pink](http://tictactoe.pink)**. It will most likely be in the most recent commit/build of the code found here.
 
 Alternatively, can be previewed from source using 
-**[rawgit](https://cdn.rawgit.com/beug/breathmint_phalange_gaiden/aa7ae795/index.html)** – please only use this to verify that commits are working correctly.
+**[rawgit](https://rawgit.com/beug/breathmint_phalange_gaiden/master/index.html)** – please only use this to verify that the codebase for the current commit is functioning as expected, as (for good reason) rawgit is rate limited in dev mode. Please visit the aforementioned hosted version of the game to play.
+
 ([full rawgit site here](https://rawgit.com/))
 
 Developed using **[p5js](https://p5js.org/)**
