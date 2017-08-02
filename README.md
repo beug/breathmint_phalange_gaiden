@@ -28,4 +28,4 @@ The player is charged with collecting Tictacs in a tictac container, and avoidin
 Tictacs, toes, and the tictac container are all .obj models loaded into the WEBGL context of p5js. At the beginning of each round a random number tictacs and toes are called upon. It will be the same number of each. A possible development of levels could employ a more challenging circumstance of how many of each get generated in the round. As of this README, the collision detection only ~*works*~ within about 25 pixels of the mouse. Since the mouse/touch doesn't have a zed axis this is a bit of a contextual lie because the tictacs and the toes do. Thereby, the perception of the nearness along the x/y axis is relative to the perspective of the "camera."
     
 ### Proper Nods
-Though the name of this game is informed by a classic NES title, the naming convention actually more of a nod to sir [Charles Barkley](https://youtu.be/8F1cOvZ3nS8?t=51)
+Though the name of this game is informed by a classic NES title, the naming convention is more of a nod to sir [Charles Barkley](https://youtu.be/8F1cOvZ3nS8?t=51) and friends.
