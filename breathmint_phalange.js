@@ -1,7 +1,6 @@
 var timex;
 var seconds = 15;
 var timestamp = 0;
-
 var tictac;
 var tictacs = [];
 var tictac_location = [];
@@ -11,7 +10,6 @@ var tictac_tones = [
 		     [254, 138, 42],  //orange
 		     [84, 224, 165]   //wintergreen
 		   ];
-
 var toe;
 var toes = [];
 var toe_location = [];
@@ -52,6 +50,7 @@ var canvas_width;
 var canvas_height;
 var canvas_reference;
 
+var countdown;
 var rules_and_regulations;
 var rules_and_regulations_content = 
 "<img src = 'graphic_assets/O_as_in_Once.gif' style='width: 9%;'>nce upon a time in a pink tropical storm, TIC TAC and TOE descended from the heavens upon the roads of Monaco. <p>Capture the beloved TIC TAC (with your cursor); avoid the dreaded TOE. Three in a row will either propell you to flavour fresh satisfaction, or precisely the inverse. <p> You could play this forever.";
@@ -79,17 +78,17 @@ var round_ended_toggle = false;
 var toggle = false;
 
 function preload() {
-  rules_and_regulations = createDiv(rules_and_regulations_content);
+  rules_and_regulations = createDiv();
   rules_and_regulations.style("visibility", "hidden");
   tictac_score = createDiv();
   tictac_score.style("visibility", "hidden");
   toe_score = createDiv(); 
   toe_score.style("visibility", "hidden");
-  win = createDiv(win_content);
+  win = createDiv();
   win.style("visibility", "hidden");
-  loss = createDiv(loss_content);
+  loss = createDiv();
   loss.style("visibility", "hidden");
-  stalemate = createDiv(stalemate_content);
+  stalemate = createDiv();
   stalemate.style("visibility", "hidden");
   subject_matter = rules_and_regulations;
   tictac = loadModel('./3D_assets/tictac.obj');
@@ -147,10 +146,19 @@ function draw() {
   var lightX = (mouseX / width  - 0.3) * 2;
   directionalLight(110, 110, 110, lightX, lightY, 0.6);
   ambientLight(180);
-  timex = round(millis()) - timestamp;
   handleTicTacBox(container, 94);
   handleTicTacBox(lid, 255);
+  rememberTheTime();
   typist(subject_matter);
+}
+
+function rememberTheTime(){
+  timex = round(millis()) - timestamp;
+  countdown = "<p>The next round will begin in 00:" + nf(map(round(timex/1000), 0, 15, 15, 0), 2, 0);
+  rules_and_regulations.html(rules_and_regulations_content + countdown);
+  win.html(win_content + countdown);
+  loss.html(loss_content + countdown);
+  stalemate.html(stalemate_content + countdown);
 }
 
 function gamePlay(game_state) {
@@ -384,7 +392,7 @@ function typeSetter(message){
   message.style("font-size", "2vw");
   message.style("font-family", "Arial");
   message.style("color", "#FFEEAA");
-  tictac_score.html ("Tictacs caught in a row: " + nf(tictac_row) + "<br>Tictac Total: " + nf(trap_count) + "/" + nf(number_of_things) + "<br>Win Count: " + nf(win_counter));
+  tictac_score.html("Tictacs caught in a row: " + nf(tictac_row) + "<br>Tictac Total: " + nf(trap_count) + "/" + nf(number_of_things) + "<br>Win Count: " + nf(win_counter));
   tictac_score.style("visibility", "visible");
   tictac_score.style("position", "fixed");
   tictac_score.style("bottom", "0px");
@@ -392,7 +400,7 @@ function typeSetter(message){
   tictac_score.style("font-size", "2vw");
   tictac_score.style("font-family", "Arial");
   tictac_score.style("color", "#FFEEAA");
-  toe_score.html ("Struck by: " + nf(toe_in_a_row) +  " toes in a row<br>Toes Total: " + nf(toed) + "/" + nf(number_of_things) + "<br>Loss Count: " + nf(loss_counter));
+  toe_score.html("Struck by: " + nf(toe_in_a_row) +  " toes in a row<br>Toes Total: " + nf(toed) + "/" + nf(number_of_things) + "<br>Loss Count: " + nf(loss_counter));
   toe_score.style("visibility", "visible");
   toe_score.style("position", "fixed");
   toe_score.style("right", "0px");
@@ -410,4 +418,3 @@ function typeSetter(message){
     titleScroller(content.substr(1) + content.substr(0, 1));
   }, 90);
 }(" TIC TAC TOE: Breathmint Phalange Gaiden Special Edition | "));
-
