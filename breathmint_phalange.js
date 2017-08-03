@@ -109,7 +109,7 @@ function centerCanvas(){
   canvas_reference.position(x, y);
 }
  
-/*TODO: investigate if rendering GL to an offscreen buffer e.g. createGraphics() would solve rezising issue*/
+/*TODO: investigate if rendering GL to an offscreen buffer e.g. createGraphics() would solve resizing issue*/
 function windowResized(){
   canvas_width = windowWidth;
   canvas_height = windowHeight;
@@ -140,8 +140,8 @@ function objectsInit(){
 }
 
 function draw() {
-  var lightY = (mouseY / height - 0.3) * 2;
-  var lightX = (mouseX / width  - 0.3) * 2;
+  var lightX = (mouseX / canvas_width  - 0.3) * 2;
+  var lightY = (mouseY / canvas_height - 0.3) * 2;
   directionalLight(110, 110, 110, lightX, lightY, 0.6);
   ambientLight(180);
   handleTicTacBox(container, 94);
@@ -317,9 +317,9 @@ function fallingObjects(model_to_use, id){
     push();
     this.scale = (0.225, 0.225, 0.225);
     this.rotation = 1;
-    this.x = this.x = lid_location[0] - canvas_width * 0.065 + 25*id + 5;
-    this.y = this.y = lid_location[1] + (canvas_height/4 - 25); 
-    this.z = this.z = lid_location[2];
+    this.x = lid_location[0] - canvas_width * 0.065 + 25*id + 5; //TODO clean up this mathfire
+    this.y = lid_location[1] + (canvas_height/4 - 25);
+    this.z = lid_location[2];
     if(id > 4 && id < 10){
       this.x -= 125;
       this.y -= 30;
@@ -377,11 +377,13 @@ function mousePressed(){
     if(mouseX > canvas_width-90 && mouseX < canvas_width && mouseY > 0 && mouseY < 90) {
       toggle = true;
       fullscreen(toggle);
+      windowResized();
     }
   }else{
     if(mouseX > canvas_width-90 && mouseX < canvas_width && mouseY > 0 && mouseY < 90) {
       toggle = false;
       fullscreen(toggle);
+      windowResized();
     }
   }
 } 
@@ -399,6 +401,7 @@ function typeSetter(message){
   message.style("color", "#FFEEAA");
   tictac_score.html("Tictacs caught in a row: " + nf(tictac_row) + "<br>Tictac Total: " + nf(trap_count) + "/" + nf(number_of_things) + "<br>Win Count: " + nf(win_counter));
   tictac_score.style("visibility", "visible");
+  tictac_score.style("left", "0px");
   tictac_score.style("position", "fixed");
   tictac_score.style("bottom", "0px");
   tictac_score.style("padding", "1%");
@@ -411,7 +414,7 @@ function typeSetter(message){
   toe_score.style("right", "0px");
   toe_score.style("bottom", "0px");
   toe_score.style("text-align", "right");
-  toe_score.style("padding", "2%");
+  toe_score.style("padding", "1%");
   toe_score.style("font-size", "2vw");
   toe_score.style("font-family", "Arial");
   toe_score.style("color", "#FFEEAA");
