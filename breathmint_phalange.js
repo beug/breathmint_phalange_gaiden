@@ -104,8 +104,8 @@ function setup() {
 }
 
 function centerCanvas(){
-  var x = (windowWidth - width) / 2;
-  var y = (windowHeight - height) / 2;
+  let x = (windowWidth - width) / 2;
+  let y = (windowHeight - height) / 2;
   canvas_reference.position(x, y);
 }
  
@@ -127,9 +127,9 @@ function objectsInit(){
   
   number_of_things = round(random(4, 15));
   
-  for (var i=0; i<number_of_things; i++) {
+  for(var i=0; i<number_of_things; i++) {
     tictacs.push(new fallingObjects(tictac, i));
-    var model_xyz = [0, 0, 0, "tictac"];
+    let model_xyz = [0, 0, 0, "tictac"];
     tictac_location.push(model_xyz);
     tictac_boolean.push(false);
     toes.push(new fallingObjects(toe, i));
@@ -140,8 +140,8 @@ function objectsInit(){
 }
 
 function draw() {
-  var lightX = (mouseX / canvas_width  - 0.3) * 2;
-  var lightY = (mouseY / canvas_height - 0.3) * 2;
+  let lightX = (mouseX / canvas_width  - 0.3) * 2;
+  let lightY = (mouseY / canvas_height - 0.3) * 2;
   directionalLight(110, 110, 110, lightX, lightY, 0.6);
   ambientLight(180);
   handleTicTacBox(container, 94);
@@ -161,7 +161,7 @@ function rememberTheTime(){
 
 function gamePlay(game_state) {
   if(game_state){
-    for (var i=0; i<number_of_things; i++){
+    for(var i=0; i<number_of_things; i++){
       if(tictac_boolean[i] == true){ 
         tictacs[i].resting();  
         tictacs[i].styling();
@@ -200,7 +200,7 @@ function gamePlay(game_state) {
 }
 
 function endRoundGracefully(){
-    for (var i=0; i<number_of_things; i++){
+    for(var i=0; i<number_of_things; i++){
       tictac_boolean[i] = false;
       tictacs[i].falling();
       tictacs[i].styling();
@@ -210,7 +210,7 @@ function endRoundGracefully(){
 }
 
 function embraceIntersection(model_to_embrace, locator){
-  var modelX, modelY, modelZ, lidX, lidY, range, previous_state, current_state; 
+  let modelX, modelY, modelZ, lidX, lidY, range, previous_state, current_state; 
 
   for(var i=0; i < model_to_embrace.length; i++){
     modelX = locator[i][0];
@@ -254,9 +254,9 @@ function nearEnoughNeighbor(x, minim, maxim){
 }
 
 function handleTicTacBox(model_to_use, alpha){
-  var x = mouseX - canvas_width/1.72
-  var y = mouseY - canvas_height/4;  //(mouseY/3)+200;
-  var z = 0;
+  let x = mouseX - canvas_width/1.72
+  let y = mouseY - canvas_height/4;  //(mouseY/3)+200;
+  let z = 0;
   push();
     lid_location[0] = round(mouseX);
     lid_location[1] = round(mouseY); 
@@ -334,7 +334,7 @@ function fallingObjects(model_to_use, id){
   };
 
   this.styling = function() {
-    var tone_offset = 0;
+    let tone_offset = 0;
     push();
       translate(-canvas_width/2 + this.x, -canvas_height/2 + this.y, this.z);
       rotateX(this.rotation * this.xRotate);
