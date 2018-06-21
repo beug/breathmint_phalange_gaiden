@@ -1,5 +1,6 @@
 var timex;
 var seconds = 15;
+var counter_threshold = 100; //allow some slack in the timer for high-falutin' browsers
 var timestamp = 0;
 var tictac;
 var tictacs = [];
@@ -101,6 +102,7 @@ function setup() {
   canvas_reference = createCanvas(canvas_width, canvas_height, WEBGL);
   centerCanvas();
   objectsInit();
+  pixelDensity(0.33);
 }
 
 function centerCanvas(){
@@ -357,7 +359,7 @@ function typist(task){
     game_state_toggle = false;
     gamePlay(game_state_toggle);
     typeSetter(task);
-  }else if(nearEnoughNeighbor(timex, (seconds * 1000) - 15, (seconds * 1000) + 15)){
+  }else if(nearEnoughNeighbor(timex, (seconds * 1000) - counter_threshold, (seconds * 1000) + counter_threshold)){
     round_ended_toggle = false;
     trap_count = 0;
     tictac_row = 0;
